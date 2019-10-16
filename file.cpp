@@ -1,13 +1,17 @@
 #include "file.h"
 
 void file :: readfile(string f) {
-	ifstream file (f, ifstream::binary);
-	file.seekg(0, file.end);
-	file_len = file.tellg();
-	file.seekg(0, file.beg);
+	ifstream File;
+	File.open(f, ios::in | ios::binary);
+	File.seekg(0, File.end);
+	length = File.tellg();
+	File.seekg(0, File.beg);
 
 	/*test*/
-	char* buffer = new char[8];
-	file.read(buffer, 8);
-	
+	buffer = (char*) malloc(sizeof(char) * length);
+	File.read(buffer, length);
+}
+file::file() {}
+file::~file() {
+	delete buffer;
 }

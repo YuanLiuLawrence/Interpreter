@@ -9,7 +9,8 @@
 using namespace std;
 class file {
 public:
-	int file_len;
+	int length;
+	char *buffer;
 	//list of the instructions in the file, it contains the byte classes(8 bits)
 	list <Byte> file_info;
 	//constructor
