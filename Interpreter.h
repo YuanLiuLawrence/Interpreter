@@ -18,7 +18,8 @@ public:
 	//program memory
 	Memory mem;
 	
-
 	void instructions(int val);
+	//execute the commands 
+	void execute(void);
 
 };
