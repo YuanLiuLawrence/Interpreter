@@ -7,13 +7,12 @@ using namespace std;
 class StackObject {
 public:	
 	int value;
-	char type;
+	char *type;
 	int position;
-	StackObject(int v, char t) {
-		value = v;
-		type = t;
-	}
-	virtual ~StackObject() {};
+	StackObject(char *t, int v);
+	StackObject(char *t, int v, int p);
+	StackObject();
+	virtual ~StackObject();
 	//compare
 	StackObject operator==(const StackObject&);
 	StackObject operator<(const StackObject&);

@@ -7,5 +7,5 @@ public:
 	vector<StackObject> stack;
 	rstack() {}
 	virtual ~rstack() {}
-	void putOnStack(void);
+	void putOnStack(StackObject obj);
 };

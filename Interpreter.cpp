@@ -37,16 +37,15 @@ sp--;*/
 		
 	/*control flow*/
 	case 36: 
-        //meaning: jump to the location at the top of the runtime stack.
-		//pc = rstack[sp]
-		//sp = sp-1;
+        //meaning: jump to the location at the top of the runtime stack.jmp
+		pc = runtimeS.stack[sp].position;
+		runtimeS.sp = sp-1;
         break; 
 		
 	case 40: 
-        //meaning: jump to the location at the top of the runtime stack is the next to the top of the runtime stack
-		/*contains the integer value 1 (true)
-	if (rstack[sp-1]) pc = rstack[sp]
-	sp = sp-2*/
+        //meaning: jump to the location at the top of the runtime stack is the next to the top of the runtime stack//jmpc
+		//contains the integer value 1 (true)
+	if (runtimeS.stack[sp-1].value){ pc = runtimeS.stack[sp].position;sp = sp-2;}
 
         break; 
 	case 44: 

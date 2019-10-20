@@ -8,9 +8,4 @@ int main(void) {
 	file file_info = file();
 	file_info.readfile("interpreter_input.smp");
 
-
-
-	
-
-
 }
