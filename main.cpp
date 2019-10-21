@@ -1,11 +1,10 @@
 #include <iostream>
 #include <string>
-#include "file.h"
-#include "Byte.h"
+#include "interreter.h"
 
 int main(void) {
 	//write
-	file file_info = file();
-	file_info.readfile("interpreter_input.smp");
+	my_interpreter = new Interpreter();
+	my_interpreter.execute();
 
 }

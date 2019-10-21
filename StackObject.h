@@ -9,8 +9,10 @@ public:
 	int value;
 	char *type;
 	int position;
+	//stack position
+	int s_position;
 	StackObject(char *t, int v);
-	StackObject(char *t, int v, int p);
+	StackObject(char *t, int v, int p, int sp);
 	StackObject();
 	virtual ~StackObject();
 	//compare
@@ -21,6 +23,8 @@ public:
 	//arithmetic
 	StackObject operator+(const StackObject&);
 	StackObject operator-(const StackObject&);
+	StackObject operator*(const StackObject&);
+	StackObject operator/(const StackObject&);
 };
 
 #endif

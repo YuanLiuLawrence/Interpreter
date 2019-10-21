@@ -64,7 +64,7 @@ StackObject StackObject::operator+(const StackObject& x){
 }
 
 
-StackObject StackObject::operator+(const StackObject& x){
+StackObject StackObject::operator-(const StackObject& x){
 	int sum;
 	StackObject new_obj;
 	if(x.type == type){
@@ -73,6 +73,27 @@ StackObject StackObject::operator+(const StackObject& x){
 	}
 	return new_obj;
 }
+StackObject StackObject::operator*(const StackObject& x){
+	int sum;
+	StackObject new_obj;
+	if(x.type == type){
+		sum = x.value * value;
+		new_obj = StackObject(type, sum);
+	}
+	return new_obj;
+}
+StackObject StackObject::operator/(const StackObject& x){
+	int sum;
+	StackObject new_obj;
+	if(x.type == type){
+		sum = x.value / value;
+		new_obj = StackObject(type, sum);
+	}
+	return new_obj;
+}
+
+
+
 
 StackObject::StackObject(char *t, int v) {
 		if(t=="short"){
@@ -93,7 +114,7 @@ StackObject::StackObject(char *t, int v) {
 		type = t;
 	}
 	
-StackObject::StackObject(char *t, int v, int p) {
+StackObject::StackObject(char *t, int v, int p, int sp) {
 		if(t=="short"){
 			short value = short(v);			
 		}
@@ -111,6 +132,7 @@ StackObject::StackObject(char *t, int v, int p) {
 		}	
 		type = t;
 		position = p;
+		s_postion = sp;
 	}
 
 StackObject::~StackObject() {}
