@@ -93,46 +93,36 @@ StackObject StackObject::operator/(const StackObject& x){
 }
 
 
-
-
-StackObject::StackObject(char *t, int v) {
-		if(t=="short"){
-			short value = short(v);			
-		}
-		if(t=="float"){
-			float value = float(v);			
-		}
-		if(t=="char"){
-			char value = char(v);			
-		}
-		if(t=="int"){
-			int value = int(v);			
-		}
-		if(t=="bool"){
-			bool value = bool(v);			
-		}	
-		type = t;
-	}
-	
-StackObject::StackObject(char *t, int v, int p, int sp) {
-		if(t=="short"){
-			short value = short(v);			
-		}
-		if(t=="float"){
-			float value = float(v);			
-		}
-		if(t=="char"){
-			char value = char(v);			
-		}
-		if(t=="int"){
-			int value = int(v);			
-		}
-		if(t=="bool"){
-			bool value = bool(v);			
-		}	
-		type = t;
+StackObject::StackObject(short t, int p, int sp) {
+		short(value);
+		strcpy(type,"short");
+		value = t;
 		position = p;
-		s_postion = sp;
+		s_position = sp;
+	}
+StackObject::StackObject(char t, int p, int sp) {
+		char(value);
+		strcpy(type,"char");
+		value = t;
+		position = p;
+		s_position = sp;
+	}
+
+StackObject::StackObject(int t, int p, int sp) {
+		strcpy(type,"int");
+		value = t;
+		
+		position = p;
+		s_position = sp;
+	}
+
+	
+StackObject::StackObject(float t, int p, int sp) {
+		float(value);
+		strcpy(type,"float");
+		value = t;
+		position = p;
+		s_position = sp;
 	}
 
 StackObject::~StackObject() {}

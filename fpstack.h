@@ -2,7 +2,7 @@
 class fpstack {
 public:
 	int fpsp = -1;
-	vector<StackObject> fstack;
+	vector<int> fstack;
 	fpstack() {};
 	virtual ~fpstack() {};
 

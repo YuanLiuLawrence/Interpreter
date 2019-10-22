@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "interreter.h"
+#include "interpreter.h"
 
 int main(void) {
 	//write

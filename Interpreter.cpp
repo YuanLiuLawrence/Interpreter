@@ -1,5 +1,5 @@
 #include "Interpreter.h"
-#inlcude "StackObject.h"
+#include "StackObject.h"
 void Interpreter::instructions(int val){
 	//
 	switch(val) {
@@ -43,12 +43,18 @@ sp--;*/
         //meaning: jump to the location at the top of the runtime stack.jmp
 		mem.pc = runtimeS.stack[runtimeS.sp].position;
 		runtimeS.sp = runtimeS.sp-1;
+		runtimeS.stack.pop_back();
         break; 
 		
 	case 40: 
         //meaning: jump to the location at the top of the runtime stack is the next to the top of the runtime stack//jmpc
 		//contains the integer value 1 (true)
-	if (runtimeS.stack[runtimeS.sp-1].value){ mem.pc = runtimeS.stack[sp].position;runtimeS.sp = runtimeS.sp-2;}
+	if (runtimeS.stack[runtimeS.sp-1].value){ 
+		mem.pc = runtimeS.stack[runtimeS.sp].position;
+		runtimeS.sp = runtimeS.sp-2;
+		runtimeS.stack.pop_back();
+		runtimeS.stack.pop_back();
+	}
 
         break; 
 		
@@ -57,13 +63,14 @@ sp--;*/
 		/*call
 		meaning: save the frame stack pointer for the current frame in the fpstack (frame pointer stack). Jump
 to the location of the function being called, whose address is on the top of the runtime stack.*/
-		frame.fstack[++fpsp] = runtimeS.sp - rstack[sp].s_position; // subtract off argument stack
+		frame.fstack.push_back(runtimeS.sp - runtimeS.stack[runtimeS.sp].value);
+		mem.pc = runtimeS.stack[runtimeS.sp - 1].position;
  // entries
-		runtimeS.sp--;
-		pc = runtimeS.stack[sp—].position //set the PC to the address of the label to be
- // jumped to
+		frame.fpsp ++;
+		runtimeS.sp-=2;
+		runtimeS.stack.pop_back();
+		runtimeS.stack.pop_back();
 
-		
         break; 
 	case 48: 
         //ret:
@@ -71,14 +78,20 @@ to the location of the function being called, whose address is on the top of the
 the top of the runtime stack, which is the address of the instruction following the call or callr statement.
 sp = fpstack[fpsp--]
 pc = rstack[sp]*/
+
+		runtimeS.sp = frame.fstack[frame.fpsp--];
+		frame.fstack.pop_back();
+		mem.pc = runtimeS.stack[runtimeS.sp].position;
+
         break; 
 	
 	/*Stack manipulation byte codes*/
 	case 68: 
 		StackObject new_obj;
-		new_obj(mem.memory[mem.pc+1],"char",mem.pc+1,runtimeS.sp+1);
+		new_obj = StackObject(mem.memory[mem.pc+1],mem.pc+1,runtimeS.sp+1);
         //pushc: meaning: push a character literal onto the top of the runtime stack.
-		runtimeS.stack[++sp] = new_obj;
+		runtimeS.stack.push_back(new_obj);
+		runtimeS.sp++;
 		mem.pc += 2;
         break; 
 	case 69: 
@@ -92,9 +105,10 @@ pc += 3;
 */
 		StackObject new_obj;
 		short val = (((short)mem.memory[mem.pc+1]) << 8) | (0x00ff & mem.memory[mem.pc+2]);
-		new_obj(val,"short",mem.pc+2,runtimeS.sp+1);
+		new_obj = StackObject(val,mem.pc+2,runtimeS.sp+1);
         //pushc: meaning: push a character literal onto the top of the runtime stack.
-		runtimeS.stack[++sp] = new_obj;
+		runtimeS.stack.push_back(new_obj);
+		runtimeS.sp++;
 		mem.pc += 3;
         break; 
 	case 70: 
@@ -104,16 +118,15 @@ convert to an int i = mem[pc+1, mem[pc+2], mem[pc+3], mem[pc+4] (see
 https://stackoverflow.com/questions/13469681/how-to-convert-4-bytes-array-to-float-in-java)
 rstack[++sp] = f
 pc += 5;*/
-		int output;
-
-		*((uchar*)(&output) + 3) = mem.memory[pc+1];
-		*((uchar*)(&output) + 2) = mem.memory[pc+2];
-		*((uchar*)(&output) + 1) = mem.memory[pc+3];
-		*((uchar*)(&output) + 0) = mem.memory[pc+4];
+int val = int((unsigned char)(mem.memory[mem.pc]) << 24 |
+            (unsigned char)(mem.memory[mem.pc+1]) << 16 |
+            (unsigned char)(mem.memory[mem.pc+2]) << 8 |
+            (unsigned char)(mem.memory[mem.pc+3]));
 		
 		StackObject new_obj;
-		new_obj(val,"int",mem.pc+4,runtimeS.sp+1);
-		runtimeS.stack[++sp] = new_obj;
+		new_obj = StackObject(val,mem.pc+4,runtimeS.sp+1);
+		runtimeS.stack.push_back(new_obj);
+		runtimeS.sp++;
         break; 
 	case 71: 
         //pushf: meaning: push a float literal onto the top of the runtime stack.
@@ -122,16 +135,15 @@ convert to a float f = mem[pc+1, mem[pc+2], mem[pc+3], mem[pc+4] (see
 https://stackoverflow.com/questions/13469681/how-to-convert-4-bytes-array-to-float-in-java)
 rstack[++sp] = f
 pc += 5;*/
-		float output;
-
-		*((uchar*)(&output) + 3) = mem.memory[pc+1];
-		*((uchar*)(&output) + 2) = mem.memory[pc+2];
-		*((uchar*)(&output) + 1) = mem.memory[pc+3];
-		*((uchar*)(&output) + 0) = mem.memory[pc+4];
+float val = float((unsigned char)(mem.memory[mem.pc]) << 24 |
+            (unsigned char)(mem.memory[mem.pc+1]) << 16 |
+            (unsigned char)(mem.memory[mem.pc+2]) << 8 |
+            (unsigned char)(mem.memory[mem.pc+3]));
 		
 		StackObject new_obj;
-		new_obj(val,"float",mem.pc+4,runtimeS.sp+1);
-		runtimeS.stack[++sp] = new_obj;
+		new_obj = StackObject(val,mem.pc+4,runtimeS.sp+1);
+		runtimeS.stack.push_back(new_obj);
+		runtimeS.sp++;
 
         break; 
 	case 72: 
@@ -139,7 +151,8 @@ pc += 5;*/
 		/*
 		meaning: push a character variable’s value (where the variable location is at the top of the runtime
 stack) onto the runtime stack.*/
-		runtimeS.stack[runtimeS.sp++] = runtimeS.stack[runtimeS.sp];
+		runtimeS.stack.push_back(runtimeS.stack[runtimeS.sp]);
+		runtimeS.sp++;
 
         break; 
 	case 73: 
@@ -149,7 +162,8 @@ stack) onto the runtime stack.*/
 onto the runtime stack.
 rstack[sp] = rstack[rstack[sp]]	
 		*/
-		runtimeS.stack[runtimeS.sp++] = runtimeS.stack[runtimeS.sp];
+		runtimeS.stack.push_back(runtimeS.stack[runtimeS.sp]);
+		runtimeS.sp++;
         break; 
 	case 74: 
         //pushvi
@@ -158,7 +172,8 @@ rstack[sp] = rstack[rstack[sp]]
 stack) onto the runtime stack.
 rstack[sp] = rstack[rstack[sp]]	
 		*/
-		runtimeS.stack[runtimeS.sp++] = runtimeS.stack[runtimeS.sp];
+		runtimeS.stack.push_back(runtimeS.stack[runtimeS.sp]);
+		runtimeS.sp++;
         break; 
 	case 75: 
         //pushvf
@@ -167,14 +182,16 @@ rstack[sp] = rstack[rstack[sp]]
 stack) onto the runtime stack.
 rstack[sp] = rstack[rstack[sp]]
 		*/
-		runtimeS.stack[runtimeS.sp++] = runtimeS.stack[runtimeS.sp];
+		runtimeS.stack.push_back(runtimeS.stack[runtimeS.sp]);
+		runtimeS.sp++;
+		
         break; 
 	case 76: 
         //popm
 		/*
 		meaning: pop multiple entries off of the runtime stack, discarding their values. The number of entries
 to pop is at the top of the runtime stack.*/
-		int num = rstack[sp].value;
+		int num = runtimeS.stack[sp].value;
 		for(int x =0; x < num; x ++){
 			runtimeS.stack.pop_back();
 		}
@@ -191,6 +208,16 @@ rstack[fpstack[fpsp] + 2] = rstack[sp – rstack[sp]+1]
 rstack[fpstack[fpsp] + rstack[sp]] = rstack[sp-1]
 sp = fpstack[fpsp]+rstack[sp]
 		*/
+		int num = runtimeS.stack[runtimeS.sp].value;
+		for(int i =1; i <= num; i++){
+			runtimeS.stack[frame.fstack[frame.fpsp] + i] = runtimeS.stack[runtimeS.sp – runtimeS.stack[sp] + i -1];
+		}
+		runtimeS.sp = frame.fstack[frame.fpsp] + num;
+		
+		for(int j = 0; j<num; j++){
+			runtimeS.stack.pop_back();
+		}
+		
 		
 		
         break; 
@@ -205,6 +232,7 @@ sp -= 2
 		runtimeS.stack[sp] = runtimeS.stack[sp-1];
 		runtimeS.sp -= 2;
 		runtimeS.stack.pop_back();
+		runtimeS.stack.pop_back();
         break; 
 	case 84: 
         //peekc
@@ -216,6 +244,10 @@ rstack[fpstack[fpsp] + rstack[sp-1]+1] = rstack[fpstack[fpsp]
 +rstack[sp]+1]
 		
 		*/
+		runtimeS.stack[frame.fstack[frame.fpsp] + runtimeS.stack[runtimeS.sp - 1].s_position + 1] = runtimeS.stack[frame.fstack[frame.fpsp]+runtimeS.stack[runtimeS.sp].value+1];
+		
+		
+		
         break; 
 	case 85: 
         //peeks
@@ -379,28 +411,28 @@ sp--;
 		cout<<"PC: "<<mem.pc<<"\n";
 		cout<<"sp: "<<runtimeS.sp<<"\n";
 		cout<<"rstack: ";
-		if!(runtimeS.stack){
+		if(runtimeS.stack.empty()){
 			cout<<"empty"<<"\n";
 		}
 		else{	
 			while(i<runtimeS.stack.size()){
-				count<<runtimeS.stack[i].value<<" ";
+				cout<<runtimeS.stack[i].value<<" ";
 				i++;
 			}
-			count<<"\n";
+			cout<<"\n";
 		}
 		cout<<"fpsp: "<<frame.fpsp<<"\n";
 		
 		cout<<"fpstack: ";
-		if!(frame.fstack){
+		if(frame.fstack.empty()){
 			cout<<"empty"<<"\n";
 		}
 		else{	
 			while(j<frame.fstack.size()){
-				count<<frame.fstack[j].value<<" ";
+				cout<<(runtimeS.stack[frame.fstack[j]].value)<<" ";
 				j++;
 			}
-			count<<"\n";
+			cout<<"\n";
 		}
 		
         break; 
@@ -419,6 +451,7 @@ void Interpreter::execute(void){
 		//call the instruction function
 		instructions(mem.memory[mem.pc]);
 		mem.pc ++;
+		
 	}
 }
 
