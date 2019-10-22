@@ -191,7 +191,7 @@ rstack[sp] = rstack[rstack[sp]]
 		/*
 		meaning: pop multiple entries off of the runtime stack, discarding their values. The number of entries
 to pop is at the top of the runtime stack.*/
-		int num = runtimeS.stack[sp].value;
+		int num = runtimeS.stack[runtimeS.sp].value;
 		for(int x =0; x < num; x ++){
 			runtimeS.stack.pop_back();
 		}
@@ -210,7 +210,7 @@ sp = fpstack[fpsp]+rstack[sp]
 		*/
 		int num = runtimeS.stack[runtimeS.sp].value;
 		for(int i =1; i <= num; i++){
-			runtimeS.stack[frame.fstack[frame.fpsp] + i] = runtimeS.stack[runtimeS.sp – runtimeS.stack[sp] + i -1];
+			runtimeS.stack[frame.fstack[frame.fpsp] + i] = runtimeS.stack[(int(runtimeS.sp - num) + i -1)];
 		}
 		runtimeS.sp = frame.fstack[frame.fpsp] + num;
 		
@@ -229,7 +229,7 @@ top of the stack, the value popped is the next element into the stack.
 rstack[rstack[sp]] = rstack[sp-1]
 sp -= 2
 		*/
-		runtimeS.stack[sp] = runtimeS.stack[sp-1];
+		runtimeS.stack[runtimeS.sp] = runtimeS.stack[runtimeS.sp-1];
 		runtimeS.sp -= 2;
 		runtimeS.stack.pop_back();
 		runtimeS.stack.pop_back();
@@ -258,6 +258,7 @@ the top element of the runtime stack.
 rstack[fpstack[fpsp] + rstack[sp-1]+1] = rstack[fpstack[fpsp]
 +rstack[sp]+1]
 		*/
+		runtimeS.stack[frame.fstack[frame.fpsp] + runtimeS.stack[runtimeS.sp - 1].s_position + 1] = runtimeS.stack[frame.fstack[frame.fpsp]+runtimeS.stack[runtimeS.sp].value+1];
         break; 
 	case 86: 
         //peeki
@@ -270,6 +271,9 @@ rstack[fpstack[fpsp] + rstack[sp-1]+1] = rstack[fpstack[fpsp]
 
 		
 		*/
+		runtimeS.stack[frame.fstack[frame.fpsp] + runtimeS.stack[runtimeS.sp - 1].s_position + 1] = runtimeS.stack[frame.fstack[frame.fpsp]+runtimeS.stack[runtimeS.sp].value+1];
+		
+		
         break; 
 	case 87: 
         //peekf
@@ -280,6 +284,9 @@ the top element of the runtime stack.
 rstack[fpstack[fpsp] + rstack[sp-1]+1] = rstack[fpstack[fpsp]
 +rstack[sp]+1]
 		*/
+		
+		runtimeS.stack[frame.fstack[frame.fpsp] + runtimeS.stack[runtimeS.sp - 1].s_position + 1] = runtimeS.stack[frame.fstack[frame.fpsp]+runtimeS.stack[runtimeS.sp].value+1];
+		
         break; 
 	case 88: 
 		//pokec
@@ -290,6 +297,7 @@ to the top element of the runtime stack.
 rstack[fpstack[fpsp] +rstack[sp]+1] = rstack[fpstack[fpsp] +
 rstack[sp-1]+1]
 		*/
+		
 
 		
         break; 
@@ -340,9 +348,9 @@ tmp = rstack[sp-1]
 rstack[sp-1] = rstack[sp]
 rstack[sp] = tmp
 	*/
-	StackObject tmp = runtimeS.stack[sp-1];
-	runtimeS.stack[sp-1] = runtimeS.stack[sp];
-	runtimeS.stack[sp] = tmp;
+	StackObject tmp = runtimeS.stack[runtimeS.sp-1];
+	runtimeS.stack[runtimeS.sp-1] = runtimeS.stack[runtimeS.sp];
+	runtimeS.stack[runtimeS.sp] = tmp;
 	
 	/*arithmetic byte code*/
         break; 
@@ -383,23 +391,23 @@ sp--;
 	case 148: 
 	//printc
 	//System.out.println(rstack[sp--]);
-		cout<<runtimeS.stack[sp--].value<<endl;
+		cout<<runtimeS.stack[runtimeS.sp--].value<<endl;
 		runtimeS.stack.pop_back();
 
         break; 
 	case 149: 
 //System.out.println(rstack[sp--]);prints
-		cout<<runtimeS.stack[sp--].value<<endl;
+		cout<<runtimeS.stack[runtimeS.sp--].value<<endl;
 		runtimeS.stack.pop_back();
         break; 
 	case 150: 
 //System.out.println(rstack[sp--]);printi
-		cout<<runtimeS.stack[sp--].value<<endl;
+		cout<<runtimeS.stack[runtimeS.sp--].value<<endl;
 		runtimeS.stack.pop_back();
         break; 
 	case 151: 
 //System.out.println(rstack[sp--]);printf
-		cout<<runtimeS.stack[sp--].value<<endl;
+		cout<<runtimeS.stack[runtimeS.sp--].value<<endl;
 		runtimeS.stack.pop_back();
         break; 
 	case 0: 
