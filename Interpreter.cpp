@@ -10,7 +10,9 @@ void Interpreter::instructions(int val_test){
 	int num_s;
 	int num;
 	char input;
-
+	
+	int num_res;
+	int num_pop;
 
 	short outs;
 	float outf;
@@ -59,7 +61,7 @@ sp--;*/
 		/*control flow*/
 	case 36:
 		//meaning: jump to the location at the top of the runtime stack.jmp
-		mem.pc = runtimeS.stack[runtimeS.sp].value;
+		mem.pc = runtimeS.stack[runtimeS.sp].value -1 ;
 		runtimeS.sp = runtimeS.sp - 1;
 		runtimeS.stack.pop_back();
 		break;
@@ -68,7 +70,7 @@ sp--;*/
 		//meaning: jump to the location at the top of the runtime stack is the next to the top of the runtime stack//jmpc
 		//contains the integer value 1 (true)
 		if (runtimeS.stack[runtimeS.sp - 1].value) {
-			mem.pc = runtimeS.stack[runtimeS.sp].value;
+			mem.pc = runtimeS.stack[runtimeS.sp].value - 1;
 		}
 		runtimeS.stack.pop_back();
 		runtimeS.stack.pop_back();
@@ -99,7 +101,7 @@ pc = rstack[sp]*/
 
 		runtimeS.sp = frame.fstack[frame.fpsp--];
 		frame.fstack.pop_back();
-		mem.pc = runtimeS.stack[runtimeS.sp--].value;
+		mem.pc = runtimeS.stack[runtimeS.sp--].value - 1;
 		runtimeS.stack.pop_back();
 
 		break;
@@ -226,13 +228,15 @@ rstack[fpstack[fpsp] + 2] = rstack[sp – rstack[sp]+1]
 rstack[fpstack[fpsp] + rstack[sp]] = rstack[sp-1]
 sp = fpstack[fpsp]+rstack[sp]
 		*/
-		num_s = runtimeS.stack[runtimeS.sp].value;
-		for (int i = 1; i <= num_s; i++) {
-			runtimeS.stack[frame.fstack[frame.fpsp] + i] = runtimeS.stack[(int(runtimeS.sp - num_s) + i - 1)];
+		num_s = frame.fstack[frame.fpsp];
+		num_pop = runtimeS.sp - runtimeS.stack[runtimeS.sp].value - num_s;
+		num_res = runtimeS.stack[runtimeS.sp].value;
+		for (int i = 1; i <= num_res; i++) {
+			runtimeS.stack[frame.fstack[frame.fpsp] + i] = runtimeS.stack[runtimeS.sp - num_res + i - 1];
 		}
-		runtimeS.sp = frame.fstack[frame.fpsp] + num_s;
+		runtimeS.sp = frame.fstack[frame.fpsp] + runtimeS.stack[runtimeS.sp].value;
 
-		for (int j = 0; j < num_s; j++) {
+		for (int j = 0; j < num_pop; j++) {
 			runtimeS.stack.pop_back();
 		}
 
@@ -507,8 +511,11 @@ void Interpreter::execute(void){
 		//call the instruction function
 		int test = int(mem.memory[mem.pc]);
 		instructions(int(mem.memory[mem.pc]));
-		mem.pc ++;
 		
+		if (mem.memory[mem.pc] == 0) {
+			break;
+		}
+		mem.pc++;
 	}
 }
 
