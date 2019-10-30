@@ -10,8 +10,5 @@ void file :: readfile(string f) {
 	/*test*/
 	buffer = (char*) malloc(sizeof(char) * length);
 	File.read(buffer, length);
-}
-file::file() {}
-file::~file() {
-	delete buffer;
+	int a = 1;
 }

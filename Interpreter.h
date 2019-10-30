@@ -6,9 +6,9 @@
 
 class Interpreter {
 public:
-	
-	Interpreter() {}
-	virtual ~Interpreter() {}
+	string f;
+	Interpreter(string file);
+	virtual ~Interpreter();
 	
 	/*main data structures*/
 	//running stack

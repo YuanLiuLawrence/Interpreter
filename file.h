@@ -20,7 +20,6 @@ public:
 
 	/*file api*/
 	void readfile(string File);
-	void output(string out_File);
 
 
 };

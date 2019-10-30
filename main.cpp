@@ -4,7 +4,7 @@
 
 int main(void) {
 	//write
-	my_interpreter = new Interpreter();
+	Interpreter my_interpreter = Interpreter("Basics.bin");
 	my_interpreter.execute();
 
 }

@@ -6,12 +6,12 @@ using namespace std;
 /*running stack contains a vector of the address of the object*/
 class StackObject {
 public:	
-	int value;
-	char *type;
+	float value;
+	string type;
 	int position;
 	//stack position
 	int s_position;
-	StackObject(char *t, int v);
+	StackObject(string t, int v);
 	StackObject(short t, int p, int sp);
 	StackObject(char t, int p, int sp);
 	StackObject(int t, int p, int sp);
@@ -29,6 +29,10 @@ public:
 	StackObject operator-(const StackObject&);
 	StackObject operator*(const StackObject&);
 	StackObject operator/(const StackObject&);
+
+
+	//get value
+
 };
 
 #endif

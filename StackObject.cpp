@@ -91,25 +91,28 @@ StackObject StackObject::operator/(const StackObject& x){
 	}
 	return new_obj;
 }
-
+StackObject::StackObject(string t, int v) {
+	value = v;
+	type = t;
+}
 
 StackObject::StackObject(short t, int p, int sp) {
-		short(value);
-		strcpy(type,"short");
+		short(this->value);
+		type = "short";
 		value = t;
 		position = p;
 		s_position = sp;
 	}
 StackObject::StackObject(char t, int p, int sp) {
-		char(value);
-		strcpy(type,"char");
+		char(this->value);
+		type = "char";
 		value = t;
 		position = p;
 		s_position = sp;
 	}
 
 StackObject::StackObject(int t, int p, int sp) {
-		strcpy(type,"int");
+	type = "int";
 		value = t;
 		
 		position = p;
@@ -118,15 +121,17 @@ StackObject::StackObject(int t, int p, int sp) {
 
 	
 StackObject::StackObject(float t, int p, int sp) {
-		float(value);
-		strcpy(type,"float");
+		float(this->value);
+		type = "float";
+		this->value = static_cast<float>(this->value);
 		value = t;
 		position = p;
 		s_position = sp;
 	}
+StackObject::StackObject() {}
 
 StackObject::~StackObject() {}
-StackObject::StackObject() {}
+
 
 
 
