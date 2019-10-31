@@ -1,7 +1,10 @@
 #include "Interpreter.h"
 #include "StackObject.h"
-void Interpreter::instructions(int val_test){
+int Interpreter::instructions(int val_test){
 	//
+	int flag = 0;
+
+
 	StackObject new_obj;
 	StackObject tmp;
 	short val;
@@ -469,6 +472,7 @@ rstack[sp-1]+1]
 		//Terminate the program. Print pc, sp, rstack, fpsp, fpstack. Print empty if a stack is empty. 
 		int i = 0;
 		int j = 0;
+		cout << "\n";
 		cout << "Compile values:" << "\n";
 		cout << "PC: " << mem.pc << "\n";
 		cout << "sp: " << runtimeS.sp << "\n";
@@ -495,11 +499,14 @@ rstack[sp-1]+1]
 				j++;
 			}
 			cout << "\n";
+			
 		}
-
+		flag = 1;
 		break;
 
 	}
+
+	return flag;
 
 
 
@@ -507,12 +514,12 @@ rstack[sp-1]+1]
 
 void Interpreter::execute(void){
 	/*Read the memory address one by one*/
-	while(mem.pc < mem.length){
+	while(true){
 		//call the instruction function
 		int test = int(mem.memory[mem.pc]);
-		instructions(int(mem.memory[mem.pc]));
+		int flag = instructions(int(mem.memory[mem.pc]));
 		
-		if (mem.memory[mem.pc] == 0) {
+		if (flag == 1) {
 			break;
 		}
 		mem.pc++;
