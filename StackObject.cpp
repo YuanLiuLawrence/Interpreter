@@ -3,33 +3,24 @@
 /*Comparator*/
 StackObject StackObject::operator==(const StackObject& x){
 	StackObject new_obj;
-	if(x.type == type){
+
 		if(x.value == value){
-			new_obj = StackObject("bool",1);
+			new_obj = StackObject("int",1);
 		}
 		else{
-			new_obj = StackObject("bool",0);
+			new_obj = StackObject("int",0);
 		}
-	}
-	else{
-		new_obj = StackObject("bool",0);
-	}
 	return new_obj;
 }
 
 
 StackObject StackObject::operator>(const StackObject& x){
 	StackObject new_obj;
-	if(x.type == type){
-		if(x.value > value){
-			new_obj = StackObject("bool",1);
-		}
-		else{
-			new_obj = StackObject("bool",0);
-		}
+	if (value > x.value) {
+		new_obj = StackObject("int", 1);
 	}
-	else{
-		new_obj = StackObject("bool",0);
+	else {
+		new_obj = StackObject("int", 0);
 	}
 	return new_obj;
 }
@@ -37,16 +28,11 @@ StackObject StackObject::operator>(const StackObject& x){
 
 StackObject StackObject::operator<(const StackObject& x){
 	StackObject new_obj;
-	if(x.type == type){
-		if(x.value < value){
-			new_obj = StackObject("bool",1);
-		}
-		else{
-			new_obj = StackObject("bool",0);
-		}
+	if (value < x.value) {
+		new_obj = StackObject("int", 1);
 	}
-	else{
-		new_obj = StackObject("bool",0);
+	else {
+		new_obj = StackObject("int", 0);
 	}
 	return new_obj;
 }
@@ -54,44 +40,36 @@ StackObject StackObject::operator<(const StackObject& x){
 
 /*operator*/
 StackObject StackObject::operator+(const StackObject& x){
-	int sum;
+	float sum;
 	StackObject new_obj;
-	if(x.type == type){
-		sum = x.value + value;
-		new_obj = StackObject(type, sum);
-	}
+	sum = x.value + value;
+	new_obj = StackObject(type, sum);
 	return new_obj;
 }
 
 
 StackObject StackObject::operator-(const StackObject& x){
-	int sum;
+	float sum;
 	StackObject new_obj;
-	if(x.type == type){
-		sum = x.value - value;
+		sum = value - x.value;
 		new_obj = StackObject(type, sum);
-	}
 	return new_obj;
 }
 StackObject StackObject::operator*(const StackObject& x){
-	int sum;
+	float sum;
 	StackObject new_obj;
-	if(x.type == type){
-		sum = x.value * value;
-		new_obj = StackObject(type, sum);
-	}
+	sum = x.value * value;
+	new_obj = StackObject(type, sum);
 	return new_obj;
 }
 StackObject StackObject::operator/(const StackObject& x){
-	int sum;
+	float sum;
 	StackObject new_obj;
-	if(x.type == type){
-		sum = x.value / value;
-		new_obj = StackObject(type, sum);
-	}
+	sum = value / x.value;
+	new_obj = StackObject(type, sum);
 	return new_obj;
 }
-StackObject::StackObject(string t, int v) {
+StackObject::StackObject(string t, float v) {
 	value = v;
 	type = t;
 }

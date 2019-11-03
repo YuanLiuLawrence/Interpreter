@@ -4,7 +4,7 @@ int Interpreter::instructions(int val_test){
 	//
 	int flag = 0;
 
-
+	uint32_t temp;
 	StackObject new_obj;
 	StackObject tmp;
 	short val;
@@ -19,7 +19,7 @@ int Interpreter::instructions(int val_test){
 
 	short outs;
 	float outf;
-	char outc;
+	int outc;
 
 	unsigned char a;
 	unsigned char b;
@@ -161,15 +161,14 @@ https://stackoverflow.com/questions/13469681/how-to-convert-4-bytes-array-to-flo
 rstack[++sp] = f
 pc += 5;*/
 		mem.pc += 1;
-		val_f = float((unsigned char)(mem.memory[mem.pc + 3]) << 24 |
-			(unsigned char)(mem.memory[mem.pc + 2]) << 16 |
-			(unsigned char)(mem.memory[mem.pc + 1]) << 8 |
-			(unsigned char)(mem.memory[mem.pc]));
-
+		temp = (((((uint32_t)mem.memory[mem.pc + 3]) << 24)) | (((uint32_t)mem.memory[mem.pc + 2]) << 16) | (((uint32_t)mem.memory[mem.pc + 1]) << 8) | ((uint32_t)mem.memory[mem.pc]));
+		memcpy(&val_f, &temp, sizeof(val_f));
 
 		new_obj = StackObject(val_f, mem.pc + 4, runtimeS.sp + 1);
 		runtimeS.stack.push_back(new_obj);
 		runtimeS.sp++;
+		mem.pc += 3;
+
 
 		break;
 	case 72:
@@ -335,6 +334,7 @@ rstack[sp-1]+1]
 		runtimeS.stack[frame.fstack[frame.fpsp] + runtimeS.stack[runtimeS.sp].value + 1] = runtimeS.stack[frame.fstack[frame.fpsp] + runtimeS.stack[runtimeS.sp-1].value + 1];
 		runtimeS.stack.pop_back();
 		runtimeS.stack.pop_back();
+		runtimeS.sp -= 2;
 
 
 		break;
@@ -352,6 +352,7 @@ rstack[sp-1]+1]
 		runtimeS.stack[frame.fstack[frame.fpsp] + runtimeS.stack[runtimeS.sp].value + 1] = runtimeS.stack[frame.fstack[frame.fpsp] + runtimeS.stack[runtimeS.sp - 1].value + 1];
 		runtimeS.stack.pop_back();
 		runtimeS.stack.pop_back();
+		runtimeS.sp -= 2;
 
 
 		break;
@@ -368,6 +369,7 @@ rstack[sp-1]+1]
 		runtimeS.stack[frame.fstack[frame.fpsp] + runtimeS.stack[runtimeS.sp].value + 1] = runtimeS.stack[frame.fstack[frame.fpsp] + runtimeS.stack[runtimeS.sp - 1].value + 1];
 		runtimeS.stack.pop_back();
 		runtimeS.stack.pop_back();
+		runtimeS.sp -= 2;
 
 
 		break;
@@ -384,6 +386,7 @@ rstack[sp-1]+1]
 		runtimeS.stack[frame.fstack[frame.fpsp] + runtimeS.stack[runtimeS.sp].value + 1] = runtimeS.stack[frame.fstack[frame.fpsp] + runtimeS.stack[runtimeS.sp - 1].value + 1];
 		runtimeS.stack.pop_back();
 		runtimeS.stack.pop_back();
+		runtimeS.sp -= 2;
 
 
 		break;
@@ -446,7 +449,7 @@ rstack[sp-1]+1]
 	case 144:
 		//printc
 		//System.out.println(rstack[sp--]);
-		outc = static_cast<char> (runtimeS.stack[runtimeS.sp--].value);
+		outc = static_cast<int> (runtimeS.stack[runtimeS.sp--].value);
 		cout << outc << endl;
 		runtimeS.stack.pop_back();
 
@@ -514,7 +517,7 @@ rstack[sp-1]+1]
 
 void Interpreter::execute(void){
 	/*Read the memory address one by one*/
-	while(true){
+ 	while(true){
 		//call the instruction function
 		int test = int(mem.memory[mem.pc]);
 		int flag = instructions(int(mem.memory[mem.pc]));

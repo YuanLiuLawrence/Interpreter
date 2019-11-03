@@ -11,7 +11,7 @@ public:
 	int position;
 	//stack position
 	int s_position;
-	StackObject(string t, int v);
+	StackObject(string t, float v);
 	StackObject(short t, int p, int sp);
 	StackObject(char t, int p, int sp);
 	StackObject(int t, int p, int sp);
